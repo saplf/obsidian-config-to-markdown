@@ -13,6 +13,7 @@ import {
 } from './settings';
 import AppI18n from './i18n';
 import { TransKeys } from './i18n/zh';
+import { getObsidianConfigTree, writeConfigTree } from './helper/sync';
 
 // Remember to rename these classes and interfaces!
 
@@ -23,6 +24,8 @@ export default class OctmPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		this.i18n = new AppI18n(this);
+		const nodes = await getObsidianConfigTree(this.app);
+		await writeConfigTree(this.app, nodes, this.settings.targetDir)
 
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('dice', 'Sample', (_evt: MouseEvent) => {
@@ -85,7 +88,6 @@ export default class OctmPlugin extends Plugin {
 		});
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		
 	}
 
 	onunload() { }
